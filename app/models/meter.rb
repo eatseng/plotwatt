@@ -16,9 +16,7 @@ class Meter < ActiveRecord::Base
         beginning = year.to_s + "-" + n.to_s + "-00"
         ending = year.to_s + "-" + n.to_s + "-32"
       end
-      monthly[n] = Meter.find_by_sql ["SELECT * FROM meters WHERE time BETWEEN ? AND ?", 
-                          beginning, ending
-                        ]
+      monthly[n] = Meter.where(time: beginning..ending)
     end
     parse_data(monthly)
   end
