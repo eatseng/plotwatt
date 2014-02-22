@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  a_on: 1.5
+  heat_ac: 1.5
+  dryer: 1.5
+  cooking: 1.5
+  other: 1.5
+  time: 2014-02-20 17:59:46
+
+two:
+  a_on: 1.5
+  heat_ac: 1.5
+  dryer: 1.5
+  cooking: 1.5
+  other: 1.5
+  time: 2014-02-20 17:59:46

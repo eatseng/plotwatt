@@ -1,0 +1,199 @@
+<script src="http://code.highcharts.com/highcharts.js"></script>
+<script src="http://code.highcharts.com/modules/exporting.js"></script>
+
+
+<div class="row-fluid"></div>
+  <div class="col-md-12">
+    <div class="row">
+      <h1 class='title'>Edward Tseng's Cover Letter</h1>
+      <p class = 'title'><a href='http://eatseng.github.io'>More information about Edward</a></p>
+      <p class = 'title'><a href='https://github.com/eatseng/plotwatt'>Git Hub Repo for this project</a></p>
+    </div>
+    <div class="row">
+      <div id="container" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto"></div>
+    </div>
+    <div class="row">
+      <div class="controls_buttons">
+        <button class="btn btn-data btn-primary" id="Always">Always On</button>
+        <button class="btn btn-data btn-primary" id="Heating">Heating & A/C</button>
+        <button class="btn btn-data btn-primary" id="Refrigeration">Refrigeration</button>
+        <button class="btn btn-data btn-primary" id="Dryer">Dryer</button>
+        <button class="btn btn-data btn-primary" id="Cooking">Cooking</button>
+        <button class="btn btn-data btn-primary" id="Other">Other</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="controls_buttons">
+        <button class="btn btn-year btn-primary" id="2009">2009</button>
+        <button class="btn btn-year" id="2010">2010</button>
+      </div>
+    </div>
+</div>
+
+<script>
+  $(function () {
+    var year = 2009;
+    var monthly_data;
+
+    var fetch_data = function(year, callback) {
+      var that = this;
+      $.ajax({
+        url: "/api/data",
+        type: "GET",
+        data: {'year': year},
+        success: function(data) {
+          callback(data)
+        }
+      });
+    };
+
+    fetch_data(year, function(data){
+      monthly_data = data;
+      render_chart();
+    });
+
+    $('.btn-year').on('click', function(event){
+      if (!$(this).hasClass('btn-primary')) {
+        $('.btn-year').toggleClass('btn-primary');
+        fetch_data($(this).text(), function(data){
+          $('.btn-data').removeClass('btn-primary').addClass('btn-primary');
+          monthly_data = data;
+          render_chart();
+        });
+      }
+    });
+
+    $('.btn-data').on('click', function(event) {
+      var data_set = $(this).attr('id');
+      $(this).toggleClass('btn-primary');
+      
+      if ( $(this).hasClass('btn-primary') ) {
+        var chart = $('#container').highcharts();
+        switch(data_set) {
+          case "Always":
+            add_always(chart);
+            break;
+          case "Heating":
+            add_heat(chart);
+            break;
+          case "Refrigeration":
+            add_refrig(chart);
+            break;
+          case "Dryer":
+            add_dryer(chart);
+            break;
+          case "Cooking":
+            add_cooking(chart);
+            break;
+          case "Other":
+            add_other(chart);
+            break;
+        }
+      } else {
+        var data = $(this).data(data_set);
+        data.remove();
+      }
+    });
+
+    var add_always = function(chart) {
+      $('#Always').data("Always", chart.addSeries({
+                    name: "Always On",
+                    data: monthly_data['a_on']
+                  }));
+    };
+
+    var add_heat = function(chart) {
+      $('#Heating').data("Heating", chart.addSeries({
+                    name: "Heating & A/C",
+                    data: monthly_data['heat_ac']
+                }));
+    };
+
+    var add_refrig = function(chart) {
+      $('#Refrigeration').data("Refrigeration", chart.addSeries({
+                    name: "Refrigeration",
+                    data: monthly_data['refrig']
+                }));
+    };
+
+    var add_dryer = function(chart) {
+      $('#Dryer').data("Dryer", chart.addSeries({
+                    name: "Dryer",
+                    data: monthly_data['dryer']
+                }));
+    };
+
+    var add_cooking = function(chart) {
+      $('#Cooking').data("Cooking", chart.addSeries({
+                    name: "Cooking",
+                    data: monthly_data['cooking']
+                }));
+    };
+
+    var add_other = function(chart) {
+      $('#Other').data("Other", chart.addSeries({
+                    name: "Other",
+                    data: monthly_data['other']
+                }));
+    };
+
+    var input_data = function(data_set) {
+      var chart = $('#container').highcharts();
+      add_always(chart);
+      add_heat(chart);
+      add_refrig(chart);
+      add_dryer(chart);
+      add_cooking(chart);
+      add_other(chart);
+    };
+
+    var render_chart = function() {
+      $('#container').highcharts({
+          chart: {
+              type: 'area'
+          },
+          title: {
+              text: 'Total Appliance-Level Energy (kwh)'
+          },
+          subtitle: {
+              text: 'Source: plotwatt'
+          },
+          xAxis: {
+              categories: monthly_data['month'],
+              tickmarkPlacement: 'on',
+              title: {
+                  enabled: false
+              }
+          },
+          yAxis: {
+              title: {
+                  text: 'mwh'
+              },
+              labels: {
+                  formatter: function() {
+                        return this.value / 1000;
+                  }
+              }
+          },
+          tooltip: {
+              shared: true,
+              valueSuffix: ' kwh'
+          },
+          plotOptions: {
+              area: {
+                  stacking: 'normal',
+                  lineColor: '#666666',
+                  lineWidth: 1,
+                  marker: {
+                      lineWidth: 1,
+                      lineColor: '#666666'
+                  }
+              }
+          },
+          series: []
+      });
+    input_data();
+    };
+});
+
+</script>
