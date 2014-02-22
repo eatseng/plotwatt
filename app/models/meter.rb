@@ -10,11 +10,11 @@ class Meter < ActiveRecord::Base
     monthly = []
     (1..12).each do |n|
       if n < 10
-        beginning = year.to_s + "-0" + n.to_s + "-00"
-        ending = year.to_s + "-0" + n.to_s + "-32"
+        beginning = year.to_s + "-0" + n.to_s + "-01"
+        ending = year.to_s + "-0" + n.to_s + "-31"
       else
-        beginning = year.to_s + "-" + n.to_s + "-00"
-        ending = year.to_s + "-" + n.to_s + "-32"
+        beginning = year.to_s + "-" + n.to_s + "-01"
+        ending = year.to_s + "-" + n.to_s + "-31"
       end
       monthly[n] = Meter.where(time: beginning..ending)
     end
