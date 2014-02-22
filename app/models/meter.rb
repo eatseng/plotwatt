@@ -12,12 +12,18 @@ class Meter < ActiveRecord::Base
       if n == 2
 	beginning = year.to_s + "-0" + n.to_s + "-01"
         ending = year.to_s + "-0" + n.to_s + "-28"
-      elsif n < 10
+      elsif n == 1 || n == 3 || n == 5 || n = 7 || n == 8
         beginning = year.to_s + "-0" + n.to_s + "-01"
         ending = year.to_s + "-0" + n.to_s + "-31"
-      else
+      elsif n == 4 || n == 6 || n == 9
+	beginning = year.to_s + "-0" + n.to_s + "-01"
+        ending = year.to_s + "-0" + n.to_s + "-30"
+      elsif n == 10 || n == 12
         beginning = year.to_s + "-" + n.to_s + "-01"
         ending = year.to_s + "-" + n.to_s + "-31"
+      else
+	beginning = year.to_s + "-" + n.to_s + "-01"
+        ending = year.to_s + "-" + n.to_s + "-30"
       end
       monthly[n] = Meter.where(time: beginning..ending)
     end
