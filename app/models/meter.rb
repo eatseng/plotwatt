@@ -9,7 +9,10 @@ class Meter < ActiveRecord::Base
   def self.monthly(year)
     monthly = []
     (1..12).each do |n|
-      if n < 10
+      if n == 2
+	beginning = year.to_s + "-0" + n.to_s + "-01"
+        ending = year.to_s + "-0" + n.to_s + "-28"
+      elsif n < 10
         beginning = year.to_s + "-0" + n.to_s + "-01"
         ending = year.to_s + "-0" + n.to_s + "-31"
       else
