@@ -12,7 +12,7 @@ class Meter < ActiveRecord::Base
       if n == 2
 	beginning = year.to_s + "-0" + n.to_s + "-01"
         ending = year.to_s + "-0" + n.to_s + "-28"
-      elsif n == 1 || n == 3 || n == 5 || n = 7 || n == 8
+      elsif n == 1 || n == 3 || n == 5 || n == 7 || n == 8
         beginning = year.to_s + "-0" + n.to_s + "-01"
         ending = year.to_s + "-0" + n.to_s + "-31"
       elsif n == 4 || n == 6 || n == 9
